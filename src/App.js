@@ -5,17 +5,24 @@ import gql from "graphql-tag";
 class App extends Component {
   render() {
     return (
-      <div>
+      <div style={{ margin: 10 }}>
         <h1>Online Courses</h1>
         <pre>{JSON.stringify(this.props.data)}</pre>
-        <ul>
-          {this.props.data.allCourses &&
-            this.props.data.allCourses.map(course => (
-              <li key={course.id}>
-                {course.name} ( {course.level} )
-              </li>
-            ))}
-        </ul>
+        {this.props.data.allStudents &&
+          this.props.data.allStudents.map(student => (
+            <React.Fragment key={student.id}>
+              <h2>
+                {student.firstName} {student.lastName}
+              </h2>
+              <ul>
+                {student.courses.map(course => (
+                  <li>
+                    {course.name} ( {course.level} )
+                  </li>
+                ))}
+              </ul>
+            </React.Fragment>
+          ))}
       </div>
     );
   }
@@ -23,11 +30,14 @@ class App extends Component {
 
 const queries = gql`
   query {
-    allCourses {
+    allStudents {
       id
-      name
-      description
-      level
+      firstName
+      lastName
+      courses {
+        name
+        level
+      }
     }
   }
 `;
